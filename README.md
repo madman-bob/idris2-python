@@ -12,6 +12,15 @@ idris2 --build idris2-python.ipkg
 ```
 This builds an executable `build/exec/idris2-python` that can be used to compile Idris 2 code into a Python module.
 
+Actually compiling Idris 2 code to a Python module requires a C compiler, and the `gmp` library.
+
+These can be installed by:
+
+```bash
+sudo apt-get install gcc
+sudo apt-get install libgmp3-dev
+```
+
 ## Compile code
 
 To compile Idris 2 code to a Python module, use `idris2-python` as you would `idris2` when [compiling with the standard backend](https://idris2.readthedocs.io/en/latest/backends/index.html).

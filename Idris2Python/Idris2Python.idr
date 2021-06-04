@@ -17,18 +17,17 @@ import Idris.Driver
 import Idris.Version
 import Libraries.Utils.Path
 
-generatePyInitFile : (filePath : String)
-                  -> (cdllName : String)
-                  -> Core (Maybe String)
-generatePyInitFile filePath cdllName = do
-    coreLift_ $ writeFile filePath $ "import ctypes\nimport pathlib\n\ncdll = ctypes.CDLL(pathlib.Path(__file__).parent / \"" ++ cdllName ++ "\")\n"
-    pure $ Just filePath
-
-generatePyMainFile : (filePath : String)
-                  -> Core (Maybe String)
-generatePyMainFile filePath = do
-    coreLift_ $ writeFile filePath $ "from . import cdll\n\ncdll.main()\n"
-    pure $ Just filePath
+copyFile : HasIO io
+        => (sourcePath : String)
+        -> (targetDirectory : String)
+        -> io (Either FileError ())
+copyFile sourcePath targetDirectory = do
+    let Just targetName = fileName sourcePath
+        | Nothing => pure $ Left FileNotFound
+    let targetPath = targetDirectory </> targetName
+    Right fileContents <- readFile sourcePath
+        | Left err => pure $ Left err
+    writeFile targetPath fileContents
 
 compile : Ref Ctxt Defs
        -> (tmpDir : String)
@@ -51,11 +50,13 @@ compile defs tmpDir outputDir term outputModule = do
     _ <- compileCObjectFile {asLibrary = True} cSourceFile cObjectFile
     _ <- compileCFile {asShared = True} cObjectFile cSharedObjectFile
 
-    let pyInitFilePath = outputModulePath </> "__init__.py"
-    let pyMainFilePath = outputModulePath </> "__main__.py"
+    templatePyInitFilePath <- findLibraryFile "Idris2Python/module_template/__init__.py"
+    templatePyMainFilePath <- findLibraryFile "Idris2Python/module_template/__main__.py"
 
-    _ <- generatePyInitFile pyInitFilePath "main.so"
-    _ <- generatePyMainFile pyMainFilePath
+    Right _ <- coreLift $ copyFile templatePyInitFilePath outputModulePath
+        | Left err => throw $ FileErr "Cannot create module __init__.py file" err
+    Right _ <- coreLift $ copyFile templatePyMainFilePath outputModulePath
+        | Left err => throw $ FileErr "Cannot create module __main__.py file" err
 
     pure $ Just outputModulePath
 

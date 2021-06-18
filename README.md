@@ -43,3 +43,19 @@ The module created in the previous section can be run by temporarily adding your
 $ PYTHONPATH=build/exec python -m hello_world
 Hello, world
 ```
+
+## Python FFIs
+
+Python FFIs may be declared with the `%foreign` directive, using the format `"python: func, module"` for a Python function `func` in module `module`.
+For builtins, omit the module.
+
+For example,
+```idris2
+%foreign "python: abs"
+abs : Int -> Int
+```
+and
+```idris2
+%foreign "python: floor, math"
+floor : Int -> Int
+```

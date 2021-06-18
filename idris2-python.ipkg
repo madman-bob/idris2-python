@@ -5,7 +5,8 @@ sourcedir = "Idris2Python"
 depends = idris2, network
 
 modules =
-    Idris2Python
+    Idris2Python,
+    Idris2Python.PythonFFI
 
 main = Idris2Python
 executable = idris2-python

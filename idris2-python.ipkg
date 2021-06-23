@@ -6,6 +6,7 @@ depends = idris2, network
 
 modules =
     Idris2Python,
+    Idris2Python.ModuleTemplate,
     Idris2Python.PythonFFI
 
 main = Idris2Python

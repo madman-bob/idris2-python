@@ -39,6 +39,15 @@ appendFile filePath additionalContents =
     withFile filePath Append pure (flip fPutStrLn additionalContents)
 
 export
+coreCopyFile : (sourcePath : String)
+            -> (targetDirectory : String)
+            -> Core String
+coreCopyFile sourcePath targetDirectory = do
+    Right targetPath <- coreLift $ copyFile sourcePath targetDirectory
+        | Left err => throw $ FileErr ("Cannot copy file " ++ sourcePath ++ " to directory " ++ targetDirectory) err
+    pure targetPath
+
+export
 generatePyInitFile : (outputModulePath : String)
                   -> (templatePyInitFilePath : String)
                   -> (pyFFIs : List PythonFFI)

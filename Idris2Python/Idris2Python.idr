@@ -40,11 +40,13 @@ compile defs tmpDir outputDir term outputModule = do
     _ <- compileCFile {asShared = True} cObjectFile cSharedObjectFile
 
     templatePyInitFilePath <- findLibraryFile "Idris2Python/module_template/__init__.py"
-    templatePyMainFilePath <- findLibraryFile "Idris2Python/module_template/__main__.py"
 
     generatePyInitFile outputModulePath templatePyInitFilePath (pythonFFIs defs)
-    Right _ <- coreLift $ copyFile templatePyMainFilePath outputModulePath
-        | Left err => throw $ FileErr "Cannot create module __main__.py file" err
+    _ <- coreCopyFile !(findLibraryFile "Idris2Python/module_template/__main__.py") outputModulePath
+    ensureDirectoryExists $ outputModulePath </> "idris2"
+    _ <- coreCopyFile !(findLibraryFile "Idris2Python/module_template/idris2/__init__.py") (outputModulePath </> "idris2")
+    _ <- coreCopyFile !(findLibraryFile "Idris2Python/module_template/idris2/foreign_python.py") (outputModulePath </> "idris2")
+    _ <- coreCopyFile !(findLibraryFile "Idris2Python/module_template/idris2/refc_types.py") (outputModulePath </> "idris2")
 
     pure $ Just outputModulePath
 

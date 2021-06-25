@@ -48,17 +48,18 @@ ctypesTypeOfCFType CFUnsigned64    = "ctypes.c_uint64"
 ctypesTypeOfCFType CFString        = "ctypes.c_char_p"
 ctypesTypeOfCFType CFDouble        = "ctypes.c_double"
 ctypesTypeOfCFType CFChar          = "ctypes.c_char"
+ctypesTypeOfCFType (CFUser n args) = "ctypes.py_object"
 ctypesTypeOfCFType n = assert_total $ idris_crash ("INTERNAL ERROR: Unknown FFI type in Python backend: " ++ show n)
 
 export
 initFFIStub : PythonFFI -> String
 initFFIStub pyFFI@(MkPythonFFI pyModule name argTypes (CFIORes retType)) = initFFIStub (MkPythonFFI pyModule name (concat $ init' argTypes) retType)
 initFFIStub pyFFI@(MkPythonFFI pyModule name argTypes retType) = concat [
-    "ctypes.c_void_p.in_dll(cdll, \"",
+    "foreign_python.register_py_func(\"",
     cName (UN $ "python_" ++ name),
-    "\").value = ctypes.cast(ctypes.CFUNCTYPE(",
-    concat $ intersperse ", " $ map ctypesTypeOfCFType (retType :: argTypes),
-    ")(",
+    "\", ",
     pyFullName pyFFI,
-    "), ctypes.c_void_p).value"
+    ", ",
+    concat $ intersperse ", " $ map ctypesTypeOfCFType (retType :: argTypes),
+    ")"
     ]

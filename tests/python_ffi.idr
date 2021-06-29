@@ -18,8 +18,29 @@ prim__python_print : StringUTF8 -> PrimIO ()
 python_print : HasIO io => StringUTF8 -> io ()
 python_print = primIO . prim__python_print
 
+data PythonUTF8Iterable : Type where [external]
+
+%foreign "python: list"
+prim__python_explode : StringUTF8 -> PrimIO PythonUTF8Iterable
+
+python_explode : HasIO io => StringUTF8 -> io PythonUTF8Iterable
+python_explode = primIO . prim__python_explode
+
+%foreign "python: map"
+prim__python_map : (StringUTF8 -> StringUTF8) -> PythonUTF8Iterable -> PrimIO PythonUTF8Iterable
+
+python_map : HasIO io => (StringUTF8 -> StringUTF8) -> PythonUTF8Iterable -> io PythonUTF8Iterable
+python_map f xs = primIO $ prim__python_map f xs
+
+%foreign "python: \"\".join"
+prim__python_concat : PythonUTF8Iterable -> PrimIO StringUTF8
+
+python_concat : HasIO io => PythonUTF8Iterable -> io StringUTF8
+python_concat = primIO . prim__python_concat
+
 main : IO ()
 main = do
     putStrLn $ show $ abs $ -1
     putStrLn $ show $ gcd 4 6
     python_print $ title $ asUTF8 "hello, world"
+    python_print !(python_concat !(python_map title !(python_explode $ asUTF8 "hello, world")))

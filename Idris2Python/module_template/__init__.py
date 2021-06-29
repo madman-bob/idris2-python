@@ -18,6 +18,9 @@ cdll.makeClosureFromArglist.restype = ctypes.c_void_p
 cdll.makeGCPointer.argtypes = (ctypes.py_object, ctypes.c_void_p)
 cdll.makeGCPointer.restype = ctypes.c_void_p
 
+cdll.apply_closure.argtypes = (ctypes.POINTER(refc_types.Value_Closure), ctypes.POINTER(refc_types.Value))
+cdll.apply_closure.restype = ctypes.c_void_p
+
 cdll.main.argtypes = (ctypes.c_int, ctypes.POINTER(ctypes.c_char_p))
 
 foreign_python.cdll = cdll

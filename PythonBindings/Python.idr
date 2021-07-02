@@ -1,5 +1,6 @@
 module Python
 
+import public Python.PythonBool
 import public Python.PythonDict
 import public Python.PythonList
 import public Python.PythonObject

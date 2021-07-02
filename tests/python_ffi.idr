@@ -38,9 +38,19 @@ prim__python_concat : PythonUTF8Iterable -> PrimIO StringUTF8
 python_concat : HasIO io => PythonUTF8Iterable -> io StringUTF8
 python_concat = primIO . prim__python_concat
 
+%foreign "python: lambda f: f(\"Called from within Python\")"
+prim__python_call : (StringUTF8 -> PrimIO ()) -> PrimIO ()
+
+toPrimIO : IO a -> PrimIO a
+toPrimIO io world = toPrim io world
+
+python_call : (StringUTF8 -> IO ()) -> IO ()
+python_call f = primIO $ prim__python_call $ toPrimIO . f
+
 main : IO ()
 main = do
     putStrLn $ show $ abs $ -1
     putStrLn $ show $ gcd 4 6
     python_print $ title $ asUTF8 "hello, world"
     python_print !(python_concat !(python_map title !(python_explode $ asUTF8 "hello, world")))
+    python_call python_print

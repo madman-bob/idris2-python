@@ -48,6 +48,7 @@ ctypesTypeOfCFType CFUnsigned64    = "ctypes.c_uint64"
 ctypesTypeOfCFType CFString        = "ctypes.c_char_p"
 ctypesTypeOfCFType CFDouble        = "ctypes.c_double"
 ctypesTypeOfCFType CFChar          = "ctypes.c_char"
+ctypesTypeOfCFType CFWorld         = "ctypes.POINTER(refc_types.Value_World)"
 ctypesTypeOfCFType (CFFun args rt) = concat [
     "ctypes.CFUNCTYPE(",
     ctypesTypeOfCFType rt,
@@ -55,6 +56,7 @@ ctypesTypeOfCFType (CFFun args rt) = concat [
     ctypesTypeOfCFType args,
     ")"
     ]
+ctypesTypeOfCFType (CFIORes t)     = ctypesTypeOfCFType t
 ctypesTypeOfCFType (CFUser n args) = "ctypes.py_object"
 ctypesTypeOfCFType n = assert_total $ idris_crash ("INTERNAL ERROR: Unknown FFI type in Python backend: " ++ show n)
 

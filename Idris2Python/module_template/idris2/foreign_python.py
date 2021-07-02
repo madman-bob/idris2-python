@@ -1,6 +1,6 @@
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_void_p, cast, py_object, pythonapi
 
-from .refc_types import Value, Value_Closure, Value_GCPointer, Value_Pointer, fun_ptr_t
+from .refc_types import Value, Value_Closure, Value_GCPointer, Value_Pointer, Value_World, fun_ptr_t
 
 __all__ = ["to_idris_obj", "from_idris_obj", "to_idris_func", "register_py_func"]
 
@@ -56,6 +56,30 @@ def from_idris_obj(idris_obj, obj_type):
     return idris_obj
 
 
+def to_idris_args(args, ret_type, arg_type):
+    args = iter(args)
+
+    while True:
+        if arg_type is POINTER(Value_World):
+            # Not correct, but I'm not sure how to get the appropriate World object
+            # Only relevant when using IORefs
+            yield cast(cdll.makeWorld(), POINTER(Value)), ret_type
+        else:
+            yield cast(to_idris_obj(next(args), arg_type), POINTER(Value)), ret_type
+
+        if not is_cfunc_type(ret_type):
+            try:
+                next(args)
+            except StopIteration:
+                return
+
+            raise TypeError(
+                f"Idris object is not a function: {ret_type}"
+            )
+
+        ret_type, arg_type = ret_type._restype_, *ret_type._argtypes_
+
+
 def to_idris_func(py_func, ret_type, *arg_types):
     idris_type = lambda c_type: (
         c_void_p
@@ -72,6 +96,8 @@ def to_idris_func(py_func, ret_type, *arg_types):
             "Idris2Python does not currently support returning Strings from %foreign functions"
         )
 
+    arg_types = tuple(filter(lambda c_type: c_type is not POINTER(Value_World), arg_types))
+
     @CFUNCTYPE(idris_type(ret_type), *map(idris_type, arg_types))
     def idris_func(*args):
         return to_idris_obj(py_func(*(
@@ -82,27 +108,18 @@ def to_idris_func(py_func, ret_type, *arg_types):
     return idris_func
 
 
-def from_idris_func(idris_func, ret_type, *arg_types):
-    arglist = cast(idris_func, POINTER(Value_Closure)).contents.arglist.contents
-    remaining_arg_count = arglist.total - arglist.filled
-
+def from_idris_func(idris_func, ret_type, arg_type):
     def py_func(*args):
-        if len(args) != remaining_arg_count:
-            raise TypeError(
-                "Idris function called with incorrect number of arguments. "
-                f"Expected: {remaining_arg_count} "
-                f"Actual: {len(args)}"
-            )
-
         result = idris_func
+        result_type = ret_type
 
-        for arg, arg_type in zip(args, arg_types):
+        for arg, result_type in to_idris_args(args, ret_type, arg_type):
             result = cdll.apply_closure(
                 cast(result, POINTER(Value_Closure)),
-                cast(to_idris_obj(arg, arg_type), POINTER(Value))
+                arg
             )
 
-        return from_idris_obj(result, ret_type)
+        return from_idris_obj(result, result_type)
 
     return py_func
 

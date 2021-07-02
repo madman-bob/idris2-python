@@ -4,5 +4,6 @@ sourcedir = "PythonBindings"
 
 modules =
     Python,
+    Python.PythonList,
     Python.PythonObject,
     Python.PythonString

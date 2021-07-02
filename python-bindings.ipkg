@@ -1,0 +1,8 @@
+package python
+
+sourcedir = "PythonBindings"
+
+modules =
+    Python,
+    Python.PythonObject,
+    Python.PythonString

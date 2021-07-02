@@ -6,4 +6,5 @@ modules =
     Python,
     Python.PythonList,
     Python.PythonObject,
-    Python.PythonString
+    Python.PythonString,
+    Python.PythonTuple

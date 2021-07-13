@@ -3,6 +3,7 @@ module Python
 import public Python.PythonBool
 import public Python.PythonClass
 import public Python.PythonDict
+import public Python.PythonFunction
 import public Python.PythonList
 import public Python.PythonObject
 import public Python.PythonString

@@ -7,6 +7,7 @@ modules =
     Python.PythonBool,
     Python.PythonClass,
     Python.PythonDict,
+    Python.PythonFunction,
     Python.PythonList,
     Python.PythonObject,
     Python.PythonString,

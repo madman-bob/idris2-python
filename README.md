@@ -59,3 +59,28 @@ and
 %foreign "python: floor, math"
 floor : Int -> Int
 ```
+
+## Python Bindings
+
+Python FFI bindings are provided for some Python builtins.
+
+The bindings library may be installed by:
+```bash
+idris2 --install python-bindings.ipkg
+```
+
+Once installed, the bindings may be accessed by importing the module `Python`.
+
+For example,
+```idris2
+import Python
+
+main : IO ()
+main = do
+    l <- PythonList.empty
+
+    append l "Orange"
+    append l "Apple"
+
+    print l
+```

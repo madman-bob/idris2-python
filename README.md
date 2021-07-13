@@ -60,7 +60,7 @@ and
 floor : Int -> Int
 ```
 
-## Python Bindings
+## Python "builtins" bindings
 
 Python FFI bindings are provided for some Python builtins.
 

@@ -9,6 +9,36 @@ This file will need updating should the Idris 2 file /support/refc/datatypes.h c
 import ctypes
 
 __all__ = [
+    "NO_TAG",
+    "BITS8_TAG",
+    "BITS16_TAG",
+    "BITS32_TAG",
+    "BITS64_TAG",
+    "INT8_TAG",
+    "INT16_TAG",
+    "INT32_TAG",
+    "INT64_TAG",
+    "INTEGER_TAG",
+    "DOUBLE_TAG",
+    "CHAR_TAG",
+    "STRING_TAG",
+
+    "CLOSURE_TAG",
+    "ARGLIST_TAG",
+    "CONSTRUCTOR_TAG",
+
+    "IOREF_TAG",
+    "ARRAY_TAG",
+    "POINTER_TAG",
+    "GC_POINTER_TAG",
+    "BUFFER_TAG",
+
+    "MUTEX_TAG",
+    "CONDITION_TAG",
+
+    "COMPLETE_CLOSURE_TAG",
+    "WORLD_TAG",
+
     "Value_header",
     "Value",
     "Value_Bits8",
@@ -37,6 +67,36 @@ __all__ = [
     "IORef_Storage",
     "Value_World",
 ]
+
+NO_TAG = 0
+BITS8_TAG = 1
+BITS16_TAG = 2
+BITS32_TAG = 3
+BITS64_TAG = 4
+INT8_TAG = 5
+INT16_TAG = 6
+INT32_TAG = 7
+INT64_TAG = 8
+INTEGER_TAG = 9
+DOUBLE_TAG = 10
+CHAR_TAG = 11
+STRING_TAG = 12
+
+CLOSURE_TAG = 15
+ARGLIST_TAG = 16
+CONSTRUCTOR_TAG = 17
+
+IOREF_TAG = 20
+ARRAY_TAG = 21
+POINTER_TAG = 22
+GC_POINTER_TAG = 23
+BUFFER_TAG = 24
+
+MUTEX_TAG = 30
+CONDITION_TAG = 31
+
+COMPLETE_CLOSURE_TAG = 98
+WORLD_TAG = 99
 
 
 class Value_header(ctypes.Structure):

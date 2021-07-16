@@ -1,6 +1,6 @@
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_void_p, cast, py_object, pythonapi
 
-from .refc_types import Value, Value_Closure, Value_GCPointer, Value_Pointer, Value_World, fun_ptr_t
+from .refc_types import GC_POINTER_TAG, Value, Value_Closure, Value_GCPointer, Value_Pointer, Value_World, fun_ptr_t
 
 __all__ = ["to_idris_obj", "from_idris_obj", "to_idris_func", "register_py_func"]
 
@@ -42,13 +42,17 @@ def to_idris_obj(py_obj, obj_type):
 
 def from_idris_obj(idris_obj, obj_type):
     if obj_type is py_object:
-        return cast(
-            cast(
-                c_void_p(idris_obj),
-                POINTER(Value_GCPointer)
-            ).contents.p.contents.p,
-            py_object
-        ).value
+        if idris_obj is None:
+            return None
+
+        gc_pointer = cast(c_void_p(idris_obj), POINTER(Value_GCPointer)).contents
+
+        if gc_pointer.header.tag != GC_POINTER_TAG:
+            # RefC sometimes uses makeInt64(0) to represent (), instead of NULL
+            # If we get here, we're in that case
+            return None
+
+        return cast(gc_pointer.p.contents.p, py_object).value
 
     if is_cfunc_type(obj_type):
         return from_idris_func(idris_obj, obj_type._restype_, *obj_type._argtypes_)

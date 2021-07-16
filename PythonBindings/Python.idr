@@ -8,6 +8,7 @@ import public Python.PythonList
 import public Python.PythonObject
 import public Python.PythonString
 import public Python.PythonTuple
+import public Python.PythonUnit
 
 %foreign "python: print"
 prim__py_print : PythonObject -> PrimIO ()

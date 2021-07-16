@@ -11,4 +11,5 @@ modules =
     Python.PythonList,
     Python.PythonObject,
     Python.PythonString,
-    Python.PythonTuple
+    Python.PythonTuple,
+    Python.PythonUnit

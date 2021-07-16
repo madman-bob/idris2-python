@@ -9,9 +9,6 @@ data PythonObject : Type where [external]
 export
 PrimPythonType PythonObject where
 
-export
-PrimPythonType a => PrimPythonType (PrimIO a) where
-
 public export
 interface HasIO io => PythonType io a where
     toPy : a -> io PythonObject
@@ -19,3 +16,7 @@ interface HasIO io => PythonType io a where
 export
 HasIO io => PrimPythonType a => PythonType io a where
     toPy = pure . believe_me
+
+export
+PythonType io a => PythonType io (PrimIO a) where
+    toPy = (liftIO . primIO) >=> toPy

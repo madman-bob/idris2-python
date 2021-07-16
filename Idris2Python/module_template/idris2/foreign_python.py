@@ -1,4 +1,5 @@
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_void_p, cast, py_object, pythonapi
+from dataclasses import dataclass
 
 from .refc_types import GC_POINTER_TAG, Value, Value_Closure, Value_GCPointer, Value_Pointer, Value_World, fun_ptr_t
 
@@ -112,12 +113,20 @@ def to_idris_func(py_func, ret_type, *arg_types):
     return idris_func
 
 
-def from_idris_func(idris_func, ret_type, arg_type):
-    def py_func(*args):
-        result = idris_func
-        result_type = ret_type
+@dataclass(frozen=True)
+class IdrisFunction:
+    idris_func: POINTER(Value_Closure)
+    ret_type: type
+    arg_type: type
 
-        for arg, result_type in to_idris_args(args, ret_type, arg_type):
+    def __post_init__(self):
+        cdll.newReference(cast(self.idris_func, POINTER(Value)))
+
+    def __call__(self, *args):
+        result = self.idris_func
+        result_type = self.ret_type
+
+        for arg, result_type in to_idris_args(args, self.ret_type, self.arg_type):
             result = cdll.apply_closure(
                 cast(result, POINTER(Value_Closure)),
                 arg
@@ -125,7 +134,12 @@ def from_idris_func(idris_func, ret_type, arg_type):
 
         return from_idris_obj(result, result_type)
 
-    return py_func
+    def __del__(self):
+        cdll.removeReference(cast(self.idris_func, POINTER(Value)))
+
+
+def from_idris_func(idris_func, ret_type, arg_type):
+    return IdrisFunction(cast(idris_func, POINTER(Value_Closure)), ret_type, arg_type)
 
 
 # Keep a list of Python-side references to the generated Idris functions, so

@@ -21,6 +21,12 @@ cdll.makeGCPointer.restype = ctypes.c_void_p
 cdll.makeWorld.argtypes = ()
 cdll.makeWorld.restype = ctypes.POINTER(refc_types.Value_World)
 
+cdll.newReference.argtypes = (ctypes.POINTER(refc_types.Value),)
+cdll.newReference.restype = ctypes.POINTER(refc_types.Value)
+
+cdll.removeReference.argtypes = (ctypes.POINTER(refc_types.Value),)
+cdll.removeReference.restype = ctypes.POINTER(refc_types.Value)
+
 cdll.apply_closure.argtypes = (ctypes.POINTER(refc_types.Value_Closure), ctypes.POINTER(refc_types.Value))
 cdll.apply_closure.restype = ctypes.c_void_p
 

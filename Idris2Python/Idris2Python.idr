@@ -56,7 +56,7 @@ executePython defs tmpDir term = coreLift_ $ do
     system "false"
 
 pythonCodegen : Codegen
-pythonCodegen = MkCG compile executePython
+pythonCodegen = MkCG compile executePython Nothing Nothing
 
 export
 main : IO ()

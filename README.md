@@ -21,6 +21,14 @@ sudo apt-get install gcc
 sudo apt-get install libgmp3-dev
 ```
 
+You can use both C and [Python](#python-ffis) FFIs in your Idris 2 code when compiling to Python.
+For convenience, a bindings library is provided for some Python builtins.
+
+The bindings library may be installed by:
+```bash
+idris2 --install python-bindings.ipkg
+```
+
 ## Compile code
 
 To compile Idris 2 code to a Python module, use `idris2-python` as you would `idris2` when [compiling with the standard backend](https://idris2.readthedocs.io/en/latest/backends/index.html).
@@ -60,16 +68,7 @@ and
 floor : Int -> Int
 ```
 
-## Python "builtins" bindings
-
-Python FFI bindings are provided for some Python builtins.
-
-The bindings library may be installed by:
-```bash
-idris2 --install python-bindings.ipkg
-```
-
-Once installed, the bindings may be accessed by importing the module `Python`.
+The Python builtins bindings may be accessed by importing the module `Python`.
 
 For example,
 ```idris2

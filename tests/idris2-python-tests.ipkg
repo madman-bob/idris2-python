@@ -1,0 +1,8 @@
+package idris2-python-tests
+
+sourcedir = "."
+
+depends = contrib, python, test
+
+main = Idris2PythonTests
+executable = idris2-python-tests

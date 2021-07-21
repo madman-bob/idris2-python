@@ -1,0 +1,6 @@
+cd ../../..
+
+./build/exec/idris2-python tests/Idris2Python/PythonFFI/python_ffi.idr -o python_ffi
+PYTHONPATH=build/exec/ python -m python_ffi
+
+rm -rf build/exec/python_ffi

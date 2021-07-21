@@ -1,0 +1,6 @@
+cd ../../..
+
+./build/exec/idris2-python tests/PythonBindings/Integer/python_integer.idr -o python_integer
+PYTHONPATH=build/exec/ python -m python_integer
+
+rm -rf build/exec/python_integer

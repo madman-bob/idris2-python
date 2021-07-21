@@ -1,0 +1,6 @@
+cd ../../..
+
+./build/exec/idris2-python tests/PythonBindings/Boolean/python_bool.idr -o python_bool
+PYTHONPATH=build/exec/ python -m python_bool
+
+rm -rf build/exec/python_bool

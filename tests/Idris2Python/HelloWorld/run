@@ -1,0 +1,6 @@
+cd ../../..
+
+./build/exec/idris2-python tests/Idris2Python/HelloWorld/hello_world.idr -o hello_world
+PYTHONPATH=build/exec/ python -m hello_world
+
+rm -rf build/exec/hello_world

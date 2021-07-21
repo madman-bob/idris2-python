@@ -1,1 +1,4 @@
 /build
+/tests/build
+/tests/**/output
+/tests/failures

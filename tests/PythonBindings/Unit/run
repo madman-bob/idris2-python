@@ -1,0 +1,6 @@
+cd ../../..
+
+./build/exec/idris2-python tests/PythonBindings/Unit/python_unit.idr -o python_unit
+PYTHONPATH=build/exec/ python -m python_unit
+
+rm -rf build/exec/python_unit

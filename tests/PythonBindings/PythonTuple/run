@@ -1,0 +1,6 @@
+cd ../../..
+
+./build/exec/idris2-python tests/PythonBindings/PythonTuple/python_tuple.idr -o python_tuple
+PYTHONPATH=build/exec/ python -m python_tuple
+
+rm -rf build/exec/python_tuple

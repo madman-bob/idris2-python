@@ -1,0 +1,6 @@
+cd ../../..
+
+./build/exec/idris2-python tests/PythonBindings/PythonFunction/python_function.idr -o python_function
+PYTHONPATH=build/exec/ python -m python_function | sed 's/0x[0-9a-f]\{12\}/0x0/g'
+
+rm -rf build/exec/python_function

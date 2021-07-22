@@ -1,0 +1,26 @@
+name: Run Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  run_tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    container: snazzybucket/idris2api
+    steps:
+      - name: Install additional prerequisites
+        run: |
+          apt-get update
+          apt-get install --yes gcc libgmp3-dev python-is-python3
+      - name: Check out Idris2-Python
+        uses: actions/checkout@v2
+      - name: Compile Idris2-Python
+        run: |
+          idris2 --build idris2-python.ipkg
+          idris2 --install python-bindings.ipkg
+      - name: Run Tests
+        run: make -C tests test

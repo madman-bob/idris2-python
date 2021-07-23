@@ -2,32 +2,33 @@
 
 A Python backend for Idris 2.
 
+## Prerequisites
+
+- Idris 2 and the Idris 2 API, as per the [Idris installation instructions](https://github.com/idris-lang/Idris2/blob/master/INSTALL.md).
+  
+- A C compiler, and the `gmp` library.
+
+  These can be installed by:
+
+  ```bash
+  sudo apt-get install gcc
+  sudo apt-get install libgmp3-dev
+  ```
+
+- If using Python 3.6, you'll need to manually install `dataclasses`.
+
+  ```bash
+  pip3 install dataclasses
+  ```
+
 ## Installation
 
-Install Idris 2 and the Idris 2 API, as per the [Idris intallation instructions](https://github.com/idris-lang/Idris2/blob/master/INSTALL.md).
-
-Then build the `Idris2-Python` backend:
+To build the `Idris2-Python` backend, and install the `Python` Idris library, run:
 ```bash
-idris2 --build idris2-python.ipkg
+make install
 ```
+
 This builds an executable `build/exec/idris2-python` that can be used to compile Idris 2 code into a Python module.
-
-Actually compiling Idris 2 code to a Python module requires a C compiler, and the `gmp` library.
-
-These can be installed by:
-
-```bash
-sudo apt-get install gcc
-sudo apt-get install libgmp3-dev
-```
-
-You can use both C and [Python](#python-ffis) FFIs in your Idris 2 code when compiling to Python.
-For convenience, a bindings library is provided for some Python builtins.
-
-The bindings library may be installed by:
-```bash
-idris2 --install python-bindings.ipkg
-```
 
 ## Compile code
 
@@ -53,6 +54,9 @@ Hello, world
 ```
 
 ## Python FFIs
+
+You can use both C and [Python](#python-ffis) FFIs in your Idris 2 code when compiling to Python.
+For convenience, a bindings library is provided for some Python builtins.
 
 Python FFIs may be declared with the `%foreign` directive, using the format `"python: func, module"` for a Python function `func` in module `module`.
 For builtins, omit the module.

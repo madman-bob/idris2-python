@@ -23,4 +23,4 @@ jobs:
           idris2 --build idris2-python.ipkg
           idris2 --install python-bindings.ipkg
       - name: Run Tests
-        run: make -C tests test
+        run: make test

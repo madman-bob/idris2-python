@@ -36,7 +36,7 @@ To compile Idris 2 code to a Python module, use `idris2-python` as you would `id
 
 eg.
 ```bash
-./build/exec/idris2-python tests/hello_world.idr -o hello_world
+./build/exec/idris2-python tests/Idris2Python/HelloWorld/hello_world.idr -o hello_world
 ```
 
 This produces a Python module in `build/exec`.
@@ -55,19 +55,19 @@ Hello, world
 
 ## Python FFIs
 
-You can use both C and [Python](#python-ffis) FFIs in your Idris 2 code when compiling to Python.
+You can use both C and Python FFIs in your Idris 2 code when compiling to Python.
 For convenience, a bindings library is provided for some Python builtins.
 
 Python FFIs may be declared with the `%foreign` directive, using the format `"python: func, module"` for a Python function `func` in module `module`.
 For builtins, omit the module.
 
 For example,
-```idris2
+```idris
 %foreign "python: abs"
 abs : Int -> Int
 ```
 and
-```idris2
+```idris
 %foreign "python: floor, math"
 floor : Int -> Int
 ```
@@ -75,7 +75,7 @@ floor : Int -> Int
 The Python builtins bindings may be accessed by importing the module `Python`.
 
 For example,
-```idris2
+```idris
 import Python
 
 main : IO ()

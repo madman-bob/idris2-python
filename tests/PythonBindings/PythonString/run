@@ -1,6 +1,9 @@
 cd ../../..
 
 ./build/exec/idris2-python tests/PythonBindings/PythonString/python_string.idr -o python_string
+
+ulimit -Sv 100000
+
 PYTHONPATH=build/exec/ python -m python_string
 
 rm -rf build/exec/python_string

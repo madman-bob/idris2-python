@@ -38,6 +38,9 @@ def to_idris_obj(py_obj, obj_type):
     if is_cfunc_type(obj_type):
         return to_idris_func(py_obj, obj_type._restype_, *obj_type._argtypes_)
 
+    if obj_type is c_char_p:
+        return cast(py_obj, c_void_p).value
+
     return py_obj
 
 
@@ -92,18 +95,9 @@ def to_idris_func(py_func, ret_type, *arg_types):
         c_type
     )
 
-    if ret_type is c_char_p:
-        # Due to an incompatibility between RefC memory management, and Python
-        # memory management, returning char* normally results in a memory leak.
-        # Python wants to pass ownership of the char* to RefC, but RefC takes
-        # a copy instead, resulting in a dangling copy of the string.
-        raise TypeError(
-            "Idris2Python does not currently support returning Strings from %foreign functions"
-        )
-
     arg_types = tuple(filter(lambda c_type: c_type is not POINTER(Value_World), arg_types))
 
-    @CFUNCTYPE(idris_type(ret_type), *map(idris_type, arg_types))
+    @CFUNCTYPE(idris_type(ret_type) if ret_type is not c_char_p else c_void_p, *map(idris_type, arg_types))
     def idris_func(*args):
         return to_idris_obj(py_func(*(
             from_idris_obj(arg, arg_type)

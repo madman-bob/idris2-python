@@ -16,18 +16,15 @@ import Idris2Python.PythonFFI
 unique : Ord a => List a -> List a
 unique = SortedSet.toList . fromList
 
-export
-copyFile : HasIO io
-        => (sourcePath : String)
-        -> (targetDirectory : String)
-        -> io (Either FileError String)
-copyFile sourcePath targetDirectory = do
+copyFile' : HasIO io
+         => (sourcePath : String)
+         -> (targetDirectory : String)
+         -> io (Either FileError String)
+copyFile' sourcePath targetDirectory = do
     let Just targetName = fileName sourcePath
         | Nothing => pure $ Left FileNotFound
     let targetPath = targetDirectory </> targetName
-    Right fileContents <- readFile sourcePath
-        | Left err => pure $ Left err
-    Right () <- writeFile targetPath fileContents
+    Right () <- copyFile sourcePath targetPath
         | Left err => pure $ Left err
     pure $ Right targetPath
 
@@ -43,7 +40,7 @@ coreCopyFile : (sourcePath : String)
             -> (targetDirectory : String)
             -> Core String
 coreCopyFile sourcePath targetDirectory = do
-    Right targetPath <- coreLift $ copyFile sourcePath targetDirectory
+    Right targetPath <- coreLift $ copyFile' sourcePath targetDirectory
         | Left err => throw $ FileErr ("Cannot copy file " ++ sourcePath ++ " to directory " ++ targetDirectory) err
     pure targetPath
 
@@ -56,7 +53,7 @@ generatePyInitFile outputModulePath templatePyInitFilePath pyFFIs = do
     let pyFFIImports = map ("import " ++) $ unique $ map show $ catMaybes $ map pyModule pyFFIs
     let pyFFIStubInits = map initFFIStub pyFFIs
 
-    Right pyInitFilePath <- coreLift $ copyFile templatePyInitFilePath outputModulePath
+    Right pyInitFilePath <- coreLift $ copyFile' templatePyInitFilePath outputModulePath
         | Left err => throw $ FileErr "Cannot create module __init__.py file" err
     Right () <- coreLift $ appendFile pyInitFilePath $ unlines $
             [""] ++ pyFFIImports ++ [""] ++ pyFFIStubInits

@@ -65,7 +65,7 @@ initFFIStub : PythonFFI -> String
 initFFIStub pyFFI@(MkPythonFFI pyModule name argTypes (CFIORes retType)) = initFFIStub (MkPythonFFI pyModule name (concat $ init' argTypes) retType)
 initFFIStub pyFFI@(MkPythonFFI pyModule name argTypes retType) = concat [
     "foreign_python.register_py_func(\"",
-    cName (UN $ "python_" ++ name),
+    cName (UN $ Basic $ "python_" ++ name),
     "\", ",
     pyFullName pyFFI,
     ", ",

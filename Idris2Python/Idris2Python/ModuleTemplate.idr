@@ -55,7 +55,7 @@ generatePyInitFile outputModulePath templatePyInitFilePath pyFFIs = do
 
     Right pyInitFilePath <- coreLift $ copyFile' templatePyInitFilePath outputModulePath
         | Left err => throw $ FileErr "Cannot create module __init__.py file" err
-    Right () <- coreLift $ appendFile pyInitFilePath $ unlines $
+    Right () <- coreLift $ Idris2Python.ModuleTemplate.appendFile pyInitFilePath $ unlines $
             [""] ++ pyFFIImports ++ [""] ++ pyFFIStubInits
         | Left err => throw $ FileErr "Cannot reify __init__.py template file" err
 

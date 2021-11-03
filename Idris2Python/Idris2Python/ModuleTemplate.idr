@@ -28,13 +28,6 @@ copyFile' sourcePath targetDirectory = do
         | Left err => pure $ Left err
     pure $ Right targetPath
 
-appendFile : HasIO io
-          => (filePath : String)
-          -> (additionalContents : String)
-          -> io (Either FileError ())
-appendFile filePath additionalContents =
-    withFile filePath Append pure (flip fPutStrLn additionalContents)
-
 export
 coreCopyFile : (sourcePath : String)
             -> (targetDirectory : String)

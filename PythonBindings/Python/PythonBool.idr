@@ -19,7 +19,7 @@ HasIO io => PythonType io Bool where
     toPy False = toPy prim__py_false
     toPy True = toPy prim__py_true
 
-%foreign "python: lambda *args: args.__getitem__(1) if args.__getitem__(0) else args.__getitem__(2)"
+%foreign "python: lambda *args: args[1] if args[0] else args[2]"
 prim__py_iif : PythonObject -> Int -> Int -> PrimIO Int
 
 export

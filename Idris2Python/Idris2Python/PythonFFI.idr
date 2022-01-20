@@ -13,26 +13,27 @@ import Compiler.RefC.RefC
 public export
 record PythonFFI where
     constructor MkPythonFFI
+    name : Name
     pyModule : Maybe Namespace
-    name : String
+    pyDef : String
     argTypes : List CFType
     retType : CFType
 
 export
-pyFullName : PythonFFI -> String
-pyFullName (MkPythonFFI pyModule name _ _) = show $ mkModuleIdent pyModule name
+pyFullDef : PythonFFI -> String
+pyFullDef (MkPythonFFI _ pyModule pyDef _ _) = show $ mkModuleIdent pyModule pyDef
 
 export
 pythonFFIs : List (Name, ANFDef) -> List PythonFFI
 pythonFFIs defs = do
-    (_, MkAForeign ccs argTypes retType) <- defs
+    (name, MkAForeign ccs argTypes retType) <- defs
         | _ => []
-    let Just (_, name :: opts) = parseCC ["python"] ccs
+    let Just (_, pyDef :: opts) = parseCC ["python"] ccs
         | _ => []
     let pyModule = case opts of
             [] => Nothing
             (m :: _) => Just $ mkNamespace m
-    pure $ MkPythonFFI pyModule name argTypes retType
+    pure $ MkPythonFFI name pyModule pyDef argTypes retType
 
 ctypesTypeOfCFType : CFType -> String
 ctypesTypeOfCFType CFUnit          = "ctypes.c_void_p"
@@ -62,12 +63,12 @@ ctypesTypeOfCFType n = assert_total $ idris_crash ("INTERNAL ERROR: Unknown FFI 
 
 export
 initFFIStub : PythonFFI -> String
-initFFIStub pyFFI@(MkPythonFFI pyModule name argTypes (CFIORes retType)) = initFFIStub (MkPythonFFI pyModule name (concat $ init' argTypes) retType)
-initFFIStub pyFFI@(MkPythonFFI pyModule name argTypes retType) = concat [
+initFFIStub pyFFI@(MkPythonFFI name pyModule pyDef argTypes (CFIORes retType)) = initFFIStub (MkPythonFFI name pyModule pyDef (concat $ init' argTypes) retType)
+initFFIStub pyFFI@(MkPythonFFI name pyModule pyDef argTypes retType) = concat [
     "foreign_python.register_py_func(\"",
-    cName (UN $ Basic $ "python_" ++ name),
+    cName $ NS (mkNamespace "python") name,
     "\", ",
-    pyFullName pyFFI,
+    pyFullDef pyFFI,
     ", ",
     concat $ intersperse ", " $ map ctypesTypeOfCFType (retType :: argTypes),
     ")"

@@ -9,9 +9,7 @@ export
 PrimPythonType a => PythonType io b => PythonType io (PythonFunction a b) where
   toPy = pure . believe_me
 
--- Horrible hack as we can't use '[', ']', or ',' in FFIs
--- Should read "lambda f: lambda *args: f(args[0]) if len(args) == 1 else f(args[0])(*args[1:])"
-%foreign "python: lambda f: lambda *args: f(args.__getitem__(0)) if len(args) == 1 else f(args.__getitem__(0))(*args.__getitem__(slice(*next(iter({1:None}.items())))))"
+%foreign "python: lambda f: lambda *args: f(args[0]) if len(args) == 1 else f(args[0])(*args[1:])"
 prim__py_func_cast : (PythonObject -> PrimIO PythonObject) -> PrimIO (PythonFunction PythonObject PythonObject)
 
 -- The Prelude function toPrim is linear, while we want unrestricted

@@ -25,7 +25,7 @@ copyFile' sourcePath targetDirectory = do
         | Nothing => pure $ Left FileNotFound
     let targetPath = targetDirectory </> targetName
     Right () <- copyFile sourcePath targetPath
-        | Left err => pure $ Left err
+        | Left (err, _) => pure $ Left err
     pure $ Right targetPath
 
 export

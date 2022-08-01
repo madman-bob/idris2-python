@@ -13,18 +13,20 @@ import System
 import System.File
 
 import Idris.Driver
+import Idris.Syntax
 import Libraries.Utils.Path
 
 import Idris2Python.ModuleTemplate
 import Idris2Python.PythonFFI
 
 compile : Ref Ctxt Defs
+       -> Ref Syn SyntaxInfo
        -> (tmpDir : String)
        -> (outputDir : String)
        -> ClosedTerm
        -> (outputModule : String)
        -> Core (Maybe String)
-compile defs tmpDir outputDir term outputModule = do
+compile defs syn tmpDir outputDir term outputModule = do
     let outputModulePath = outputDir </> outputModule
 
     coreLift_ $ mkdirAll outputModulePath
@@ -50,8 +52,12 @@ compile defs tmpDir outputDir term outputModule = do
 
     pure $ Just outputModulePath
 
-executePython : Ref Ctxt Defs -> String -> ClosedTerm -> Core ()
-executePython defs tmpDir term = coreLift_ $ do
+executePython : Ref Ctxt Defs
+             -> Ref Syn SyntaxInfo
+             -> String
+             -> ClosedTerm
+             -> Core ()
+executePython defs syn tmpDir term = coreLift_ $ do
     putStrLn "Execute expression not yet implemented for the Python backend"
     system "false"
 

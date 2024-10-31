@@ -19,7 +19,6 @@ __all__ = [
     "STRING_TAG",
 
     "CLOSURE_TAG",
-    "ARGLIST_TAG",
     "CONSTRUCTOR_TAG",
 
     "IOREF_TAG",
@@ -31,8 +30,6 @@ __all__ = [
     "MUTEX_TAG",
     "CONDITION_TAG",
 
-    "COMPLETE_CLOSURE_TAG",
-
     "Value_header",
     "Value",
     "Value_Bits32",
@@ -43,8 +40,6 @@ __all__ = [
     "Value_Double",
     "Value_String",
     "Value_Constructor",
-    "Value_Arglist",
-    "fun_ptr_t",
     "Value_Closure",
     "Value_IORef",
     "Value_Pointer",
@@ -67,7 +62,6 @@ DOUBLE_TAG = 10
 STRING_TAG = 12
 
 CLOSURE_TAG = 15
-ARGLIST_TAG = 16
 CONSTRUCTOR_TAG = 17
 
 IOREF_TAG = 20
@@ -78,8 +72,6 @@ BUFFER_TAG = 24
 
 MUTEX_TAG = 30
 CONDITION_TAG = 31
-
-COMPLETE_CLOSURE_TAG = 98
 
 
 class Value_header(ctypes.Structure):
@@ -155,24 +147,13 @@ class Value_Constructor(ctypes.Structure):
     ]
 
 
-class Value_Arglist(ctypes.Structure):
-    _fields_ = [
-        ("header", Value_header),
-        ("total", ctypes.c_int32),
-        ("filled", ctypes.c_int32),
-        ("args", ctypes.POINTER(ctypes.POINTER(Value))),
-    ]
-
-
-# Return type is actually Value*, but Python doesn't like returning that
-fun_ptr_t = ctypes.CFUNCTYPE(ctypes.c_void_p, ctypes.POINTER(Value_Arglist))
-
-
 class Value_Closure(ctypes.Structure):
     _fields_ = [
         ("header", Value_header),
-        ("f", fun_ptr_t),
-        ("arglist", ctypes.POINTER(Value_Arglist)),
+        ("f", ctypes.c_void_p),
+        ("arity", ctypes.c_uint8),
+        ("filled", ctypes.c_uint8),
+        ("args", ctypes.POINTER(Value)),
     ]
 
 

@@ -1,7 +1,7 @@
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_void_p, cast, py_object, pythonapi
 from dataclasses import dataclass
 
-from .refc_types import GC_POINTER_TAG, Value, Value_Closure, Value_GCPointer, Value_Pointer, Value_World, fun_ptr_t
+from .refc_types import GC_POINTER_TAG, Value, Value_Closure, Value_GCPointer, Value_Pointer, Value_World
 
 __all__ = ["to_idris_obj", "from_idris_obj", "to_idris_func", "register_py_func"]
 
@@ -18,12 +18,9 @@ def is_cfunc_type(obj_type):
     return hasattr(obj_type, "argtypes")
 
 
-@fun_ptr_t
-def on_collect_idris_obj(idris_arglist):
-    py_obj = cast(
-        cast(idris_arglist.contents.args[0], POINTER(Value_Pointer)).contents.p,
-        py_object
-    ).value
+@CFUNCTYPE(c_void_p, POINTER(Value_Pointer), c_void_p)
+def on_collect_idris_obj(idris_obj, _):
+    py_obj = cast(idris_obj.contents.p, py_object).value
     pythonapi.Py_DecRef(py_obj)
 
 
@@ -32,7 +29,7 @@ def to_idris_obj(py_obj, obj_type):
         pythonapi.Py_IncRef(py_obj)
         return cdll.idris2_makeGCPointer(
             py_object(py_obj),
-            cdll.idris2_makeClosureFromArglist(on_collect_idris_obj, cdll.idris2_newArglist(2, 2))
+            cdll.idris2_mkClosure(on_collect_idris_obj, 2, 0)
         )
 
     if is_cfunc_type(obj_type):

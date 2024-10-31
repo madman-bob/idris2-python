@@ -9,11 +9,8 @@ cdll = ctypes.CDLL(pathlib.Path(__file__).parent / "main.so")
 # the other way around is fine.
 # So expect to see lots of void pointers where you'd expect to see Idris types
 
-cdll.idris2_newArglist.argtypes = (ctypes.c_int, ctypes.c_int)
-cdll.idris2_newArglist.restype = ctypes.c_void_p
-
-cdll.idris2_makeClosureFromArglist.argtypes = (refc_types.fun_ptr_t, ctypes.c_void_p)
-cdll.idris2_makeClosureFromArglist.restype = ctypes.c_void_p
+cdll.idris2_mkClosure.argtypes = (ctypes.c_void_p, ctypes.c_uint8, ctypes.c_uint8)
+cdll.idris2_mkClosure.restype = ctypes.c_void_p
 
 cdll.idris2_makeGCPointer.argtypes = (ctypes.py_object, ctypes.c_void_p)
 cdll.idris2_makeGCPointer.restype = ctypes.c_void_p

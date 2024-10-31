@@ -10,17 +10,12 @@ import ctypes
 
 __all__ = [
     "NO_TAG",
-    "BITS8_TAG",
-    "BITS16_TAG",
     "BITS32_TAG",
     "BITS64_TAG",
-    "INT8_TAG",
-    "INT16_TAG",
     "INT32_TAG",
     "INT64_TAG",
     "INTEGER_TAG",
     "DOUBLE_TAG",
-    "CHAR_TAG",
     "STRING_TAG",
 
     "CLOSURE_TAG",
@@ -40,17 +35,12 @@ __all__ = [
 
     "Value_header",
     "Value",
-    "Value_Bits8",
-    "Value_Bits16",
     "Value_Bits32",
     "Value_Bits64",
-    "Value_Int8",
-    "Value_Int16",
     "Value_Int32",
     "Value_Int64",
     "Value_Integer",
     "Value_Double",
-    "Value_Char",
     "Value_String",
     "Value_Constructor",
     "Value_Arglist",
@@ -68,17 +58,12 @@ __all__ = [
 ]
 
 NO_TAG = 0
-BITS8_TAG = 1
-BITS16_TAG = 2
 BITS32_TAG = 3
 BITS64_TAG = 4
-INT8_TAG = 5
-INT16_TAG = 6
 INT32_TAG = 7
 INT64_TAG = 8
 INTEGER_TAG = 9
 DOUBLE_TAG = 10
-CHAR_TAG = 11
 STRING_TAG = 12
 
 CLOSURE_TAG = 15
@@ -111,20 +96,6 @@ class Value(ctypes.Structure):
     ]
 
 
-class Value_Bits8(ctypes.Structure):
-    _fields_ = [
-        ("header", Value_header),
-        ("ui8", ctypes.c_uint8),
-    ]
-
-
-class Value_Bits16(ctypes.Structure):
-    _fields_ = [
-        ("header", Value_header),
-        ("ui16", ctypes.c_uint16),
-    ]
-
-
 class Value_Bits32(ctypes.Structure):
     _fields_ = [
         ("header", Value_header),
@@ -136,20 +107,6 @@ class Value_Bits64(ctypes.Structure):
     _fields_ = [
         ("header", Value_header),
         ("ui64", ctypes.c_uint64),
-    ]
-
-
-class Value_Int8(ctypes.Structure):
-    _fields_ = [
-        ("header", Value_header),
-        ("i8", ctypes.c_int8),
-    ]
-
-
-class Value_Int16(ctypes.Structure):
-    _fields_ = [
-        ("header", Value_header),
-        ("i16", ctypes.c_int16),
     ]
 
 
@@ -178,13 +135,6 @@ class Value_Double(ctypes.Structure):
     _fields_ = [
         ("header", Value_header),
         ("d", ctypes.c_double),
-    ]
-
-
-class Value_Char(ctypes.Structure):
-    _fields_ = [
-        ("header", Value_header),
-        ("c", ctypes.c_ubyte),
     ]
 
 

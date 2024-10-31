@@ -69,9 +69,7 @@ def to_idris_args(args, ret_type, arg_type):
 
     while True:
         if arg_type is POINTER(Value_World):
-            # Not correct, but I'm not sure how to get the appropriate World object
-            # Only relevant when using IORefs
-            yield cast(cdll.makeWorld(), POINTER(Value)), ret_type
+            yield cast(None, POINTER(Value)), ret_type
         else:
             yield cast(to_idris_obj(next(args), arg_type), POINTER(Value)), ret_type
 

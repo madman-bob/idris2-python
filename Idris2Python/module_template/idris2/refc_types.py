@@ -37,7 +37,6 @@ __all__ = [
     "CONDITION_TAG",
 
     "COMPLETE_CLOSURE_TAG",
-    "WORLD_TAG",
 
     "Value_header",
     "Value",
@@ -65,7 +64,6 @@ __all__ = [
     "Value_Buffer",
     "Value_Mutex",
     "Value_Condition",
-    "IORef_Storage",
     "Value_World",
 ]
 
@@ -97,7 +95,6 @@ MUTEX_TAG = 30
 CONDITION_TAG = 31
 
 COMPLETE_CLOSURE_TAG = 98
-WORLD_TAG = 99
 
 
 class Value_header(ctypes.Structure):
@@ -232,7 +229,7 @@ class Value_Closure(ctypes.Structure):
 class Value_IORef(ctypes.Structure):
     _fields_ = [
         ("header", Value_header),
-        ("index", ctypes.c_int32),
+        ("v", ctypes.POINTER(Value)),
     ]
 
 
@@ -287,16 +284,7 @@ class Value_Condition(ctypes.Structure):
     ]
 
 
-class IORef_Storage(ctypes.Structure):
-    _fields_ = [
-        ("refs", ctypes.POINTER(ctypes.POINTER(Value))),
-        ("filled", ctypes.c_int),
-        ("total", ctypes.c_int),
-    ]
-
-
+# Not represented as a value in the C backend
+# Used here as a tag to recognize when closures require an additional application
 class Value_World(ctypes.Structure):
-    _fields_ = [
-        ("header", Value_header),
-        ("listIORefs", ctypes.POINTER(IORef_Storage)),
-    ]
+    _fields_ = []

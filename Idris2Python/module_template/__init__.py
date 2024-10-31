@@ -18,9 +18,6 @@ cdll.makeClosureFromArglist.restype = ctypes.c_void_p
 cdll.makeGCPointer.argtypes = (ctypes.py_object, ctypes.c_void_p)
 cdll.makeGCPointer.restype = ctypes.c_void_p
 
-cdll.makeWorld.argtypes = ()
-cdll.makeWorld.restype = ctypes.POINTER(refc_types.Value_World)
-
 cdll.newReference.argtypes = (ctypes.POINTER(refc_types.Value),)
 cdll.newReference.restype = ctypes.POINTER(refc_types.Value)
 

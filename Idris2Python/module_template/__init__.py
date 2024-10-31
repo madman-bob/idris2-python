@@ -9,23 +9,23 @@ cdll = ctypes.CDLL(pathlib.Path(__file__).parent / "main.so")
 # the other way around is fine.
 # So expect to see lots of void pointers where you'd expect to see Idris types
 
-cdll.newArglist.argtypes = (ctypes.c_int, ctypes.c_int)
-cdll.newArglist.restype = ctypes.c_void_p
+cdll.idris2_newArglist.argtypes = (ctypes.c_int, ctypes.c_int)
+cdll.idris2_newArglist.restype = ctypes.c_void_p
 
-cdll.makeClosureFromArglist.argtypes = (refc_types.fun_ptr_t, ctypes.c_void_p)
-cdll.makeClosureFromArglist.restype = ctypes.c_void_p
+cdll.idris2_makeClosureFromArglist.argtypes = (refc_types.fun_ptr_t, ctypes.c_void_p)
+cdll.idris2_makeClosureFromArglist.restype = ctypes.c_void_p
 
-cdll.makeGCPointer.argtypes = (ctypes.py_object, ctypes.c_void_p)
-cdll.makeGCPointer.restype = ctypes.c_void_p
+cdll.idris2_makeGCPointer.argtypes = (ctypes.py_object, ctypes.c_void_p)
+cdll.idris2_makeGCPointer.restype = ctypes.c_void_p
 
-cdll.newReference.argtypes = (ctypes.POINTER(refc_types.Value),)
-cdll.newReference.restype = ctypes.POINTER(refc_types.Value)
+cdll.idris2_newReference.argtypes = (ctypes.POINTER(refc_types.Value),)
+cdll.idris2_newReference.restype = ctypes.POINTER(refc_types.Value)
 
-cdll.removeReference.argtypes = (ctypes.POINTER(refc_types.Value),)
-cdll.removeReference.restype = ctypes.POINTER(refc_types.Value)
+cdll.idris2_removeReference.argtypes = (ctypes.POINTER(refc_types.Value),)
+cdll.idris2_removeReference.restype = ctypes.POINTER(refc_types.Value)
 
-cdll.apply_closure.argtypes = (ctypes.POINTER(refc_types.Value_Closure), ctypes.POINTER(refc_types.Value))
-cdll.apply_closure.restype = ctypes.c_void_p
+cdll.idris2_apply_closure.argtypes = (ctypes.POINTER(refc_types.Value_Closure), ctypes.POINTER(refc_types.Value))
+cdll.idris2_apply_closure.restype = ctypes.c_void_p
 
 cdll.main.argtypes = (ctypes.c_int, ctypes.POINTER(ctypes.c_char_p))
 

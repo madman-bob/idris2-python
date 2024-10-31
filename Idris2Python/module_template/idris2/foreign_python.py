@@ -30,9 +30,9 @@ def on_collect_idris_obj(idris_arglist):
 def to_idris_obj(py_obj, obj_type):
     if obj_type is py_object:
         pythonapi.Py_IncRef(py_obj)
-        return cdll.makeGCPointer(
+        return cdll.idris2_makeGCPointer(
             py_object(py_obj),
-            cdll.makeClosureFromArglist(on_collect_idris_obj, cdll.newArglist(2, 2))
+            cdll.idris2_makeClosureFromArglist(on_collect_idris_obj, cdll.idris2_newArglist(2, 2))
         )
 
     if is_cfunc_type(obj_type):
@@ -112,16 +112,16 @@ class IdrisFunction:
     arg_type: type
 
     def __post_init__(self):
-        cdll.newReference(cast(self.idris_func, POINTER(Value)))
+        cdll.idris2_newReference(cast(self.idris_func, POINTER(Value)))
 
     def __call__(self, *args):
-        cdll.newReference(cast(self.idris_func, POINTER(Value)))
+        cdll.idris2_newReference(cast(self.idris_func, POINTER(Value)))
 
         result = self.idris_func
         result_type = self.ret_type
 
         for arg, result_type in to_idris_args(args, self.ret_type, self.arg_type):
-            result = cdll.apply_closure(
+            result = cdll.idris2_apply_closure(
                 cast(result, POINTER(Value_Closure)),
                 arg
             )
@@ -129,7 +129,7 @@ class IdrisFunction:
         return from_idris_obj(result, result_type)
 
     def __del__(self):
-        cdll.removeReference(cast(self.idris_func, POINTER(Value)))
+        cdll.idris2_removeReference(cast(self.idris_func, POINTER(Value)))
 
 
 def from_idris_func(idris_func, ret_type, arg_type):

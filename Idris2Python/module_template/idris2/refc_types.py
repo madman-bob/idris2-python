@@ -3,7 +3,7 @@ A Python representation of the C types used in the Idris 2 RefC backend
 
 Python types representing C types representing Idris 2 types.
 
-This file will need updating should the Idris 2 file /support/refc/datatypes.h change.
+This file will need updating should the Idris 2 file /support/refc/_datatypes.h change.
 """
 
 import ctypes
@@ -61,6 +61,7 @@ __all__ = [
     "Value_Pointer",
     "Value_GCPointer",
     "Value_Array",
+    "Buffer",
     "Value_Buffer",
     "Value_Mutex",
     "Value_Condition",
@@ -258,11 +259,17 @@ class Value_Array(ctypes.Structure):
     ]
 
 
+class Buffer(ctypes.Structure):
+    _fields_ = [
+        ("size", ctypes.c_int),
+        ("data", ctypes.c_char_p)
+    ]
+
+
 class Value_Buffer(ctypes.Structure):
     _fields_ = [
         ("header", Value_header),
-        ("len", ctypes.c_size_t),
-        ("buffer", ctypes.c_char_p),
+        ("buffer", Buffer),
     ]
 
 

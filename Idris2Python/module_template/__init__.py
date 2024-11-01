@@ -19,7 +19,7 @@ cdll.idris2_newReference.argtypes = (ctypes.POINTER(refc_types.Value),)
 cdll.idris2_newReference.restype = ctypes.POINTER(refc_types.Value)
 
 cdll.idris2_removeReference.argtypes = (ctypes.POINTER(refc_types.Value),)
-cdll.idris2_removeReference.restype = ctypes.POINTER(refc_types.Value)
+cdll.idris2_removeReference.restype = ctypes.c_void_p
 
 cdll.idris2_apply_closure.argtypes = (ctypes.POINTER(refc_types.Value_Closure), ctypes.POINTER(refc_types.Value))
 cdll.idris2_apply_closure.restype = ctypes.c_void_p

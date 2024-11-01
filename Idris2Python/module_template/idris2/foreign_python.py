@@ -115,6 +115,8 @@ class IdrisFunction:
         cdll.newReference(cast(self.idris_func, POINTER(Value)))
 
     def __call__(self, *args):
+        cdll.newReference(cast(self.idris_func, POINTER(Value)))
+
         result = self.idris_func
         result_type = self.ret_type
 

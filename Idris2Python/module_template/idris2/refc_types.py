@@ -76,8 +76,9 @@ CONDITION_TAG = 31
 
 class Value_header(ctypes.Structure):
     _fields_ = [
-        ("refCounter", ctypes.c_int),
-        ("tag", ctypes.c_int),
+        ("refCounter", ctypes.c_int16),
+        ("tag", ctypes.c_int8),
+        ("reserved", ctypes.c_int8),
     ]
 
 

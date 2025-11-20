@@ -1,6 +1,7 @@
 module Idris2Python.ModuleTemplate
 
 import Data.List
+import Data.SortedSet
 import Data.String
 
 import Core.Core
@@ -8,13 +9,12 @@ import Core.Name
 
 import System.File
 
-import Libraries.Data.SortedSet
 import Libraries.Utils.Path
 
 import Idris2Python.PythonFFI
 
 unique : Ord a => List a -> List a
-unique = SortedSet.toList . fromList
+unique = Prelude.toList . fromList
 
 copyFile' : HasIO io
          => (sourcePath : String)
